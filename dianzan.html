@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+   <ul id="favor-users">
+
+   </ul>
+   <a href="javascript:;" class="btn btn-more">...</a>
+   <script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js "></script>
+
+   <script src="http://mockjs.com/dist/mock.js"></script>
+
+   <script>
+    //  数据在哪里?资源
+    // 设计url 规则
+    // 谋篇文章的喜欢者
+    // /entry/:id/lovers/:page
+      //  伪造数据接口  前后端至少两个人，工作不同步
+      //  数据接口没开发出来， 后端哥哥在聊妹
+      //  等一哈 一两天
+      //  项目上线时间点 前两天 连调（将假数据，切换成线上真实数据，对于前段来说， 假数据可以跑通逻辑）一下， 没问题， 发布
+      //  全栈？ 前后端一个人做， 但有切割点
+      Mock.mock('/entry/1234/favor/1',
+ [
+     { 'name': '自己成就自己',
+      'avatar': 'https://dn-mhke0kuv.qbox.me/5iqygp7ledSSUCtNy2GkfnQd7ZAoYxX2Dc5FN78L?imageView2/1/w/100/h/100/q/85/interlace/1',
+      'uid':'123' }
+ ]);
+      Mock.mock('/entry/1234/favor/2',
+ [
+       { 'name': '超超',
+         'avatar': 'https://user-gold-cdn.xitu.io/2017/7/22/cfefa9cff48b562155138c547cfe2498?imageView2/1/w/100/h/100/q/85/interlace/1',
+         'uid':'124' }
+ ]);
+
+     let page = 1;
+     function getFavorsByPage(page){
+        // 请求下数据 mock 远程
+        // jquery 的ajax函数
+        // 1 ajax Js 主动去接一个接口上的数据
+        // 2 也需要这些数据 做接下来的工作或动态更新页面
+        // easy-mock 需要去设置
+        // 本地mock 本地设置 直接用
+        // fetch 仅限于 高级浏览器 es6
+        // getJSON 来自jquery 所有的浏览器都通用
+        $.getJSON('/entry/1234/favor/' + page,
+        function(data) {
+
+             appendFavors(data);
+        })
+        // fetch('/entry/1234/favor/1')
+        //   .then(blob =>blob.json())
+        //   .then(data => {
+        //    console.log(data);
+        // })
+     }
+     function appendFavors(favors){
+            document
+            .querySelector('#favor-users')
+            .innerHTML += favors.map(favor => {
+              return `
+                  <li>
+                    <a href="/user/${favor.uid}"></a>
+                    <img src="${favor.avatar}"  />
+                  </li>
+              `
+            })
+     }
+     getFavorsByPage(page);
+     document.querySelector('.btn-more')
+             .addEventListener('click', function(event) {
+               page++;
+               event.preventDefault();
+               getFavorsByPage(page)
+             },false)
+   </script>
+</body>
+</html>
